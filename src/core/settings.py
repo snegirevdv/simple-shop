@@ -12,6 +12,9 @@ TEMPLATES_DIR = BASE_DIR / "templates"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_ROOT = BASE_DIR / "media"
 
+STATIC_URL = "/static/"
+MEDIA_URL = "/media/"
+
 SECRET_KEY = os.getenv("SECRET_KEY", "simple-secret-key")
 DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1")
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1").split(",")
@@ -24,11 +27,13 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "rest_framework.authtoken",
+    "drf_spectacular",
+    "corsheaders",
     "api",
     "cart",
     "categories",
     "products",
-    "users",
 ]
 
 MIDDLEWARE = [
@@ -39,6 +44,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -77,7 +83,7 @@ DATABASE_ENGINES = {
             "HOST": os.getenv("DB_HOST", "db"),
             "PORT": os.getenv("DB_PORT", 5432),
         }
-    }
+    },
 }
 
 DATABASES = DATABASE_ENGINES[os.getenv("DB_ENGINE", "sqlite")]
@@ -97,13 +103,21 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.AllowAny",
+    ],
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 10,
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
-
-STATIC_URL = "/static/"
-MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
