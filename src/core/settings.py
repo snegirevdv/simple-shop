@@ -16,7 +16,7 @@ STATIC_URL = "/static/"
 MEDIA_URL = "/media/"
 
 SECRET_KEY = os.getenv("SECRET_KEY", "simple-secret-key")
-DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1")
+DEBUG = os.getenv("DEBUG", "True").lower() in ("true", "1")
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1").split(",")
 
 INSTALLED_APPS = [

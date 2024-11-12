@@ -1,5 +1,4 @@
 import os
-from typing import override
 
 from django.conf import settings
 from django.db import models
@@ -26,7 +25,6 @@ class Product(models.Model):
     image_large = models.ImageField(upload_to="products/large/", null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
-    @override
     def save(self, *args, **kwargs) -> None:
         super().save(*args, **kwargs)
         self.create_images()
