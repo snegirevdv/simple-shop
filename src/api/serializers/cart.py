@@ -22,32 +22,11 @@ class CartItemWriteSerializer(serializers.ModelSerializer):
         model = CartItem
         fields = ("product", "quantity")
 
-    def create(self, validated_data: dict):
-        cart = self.context["cart"]
-        product = validated_data["product"]
-        quantity = validated_data["quantity"]
-
-        cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-
-        if not created:
-            cart_item.quantity += quantity
-        else:
-            cart_item.quantity = quantity
-
-        cart_item.save()
-
-        return cart_item
-
-    def update(self, instance: CartItem, validated_data: dict):
-        instance.quantity = validated_data.get("quantity", instance.quantity)
-        instance.save()
-        return instance
-
 
 class CartReadSerializer(serializers.ModelSerializer):
-    items = CartItemReadSerializer(many=True)
-    total_quantity = serializers.IntegerField()
-    total_price = serializers.DecimalField(max_digits=10, decimal_places=2)
+    items = CartItemReadSerializer(source="cart_items", many=True)
+    total_quantity = serializers.SerializerMethodField()
+    total_price = serializers.SerializerMethodField()
 
     class Meta:
         model = Cart

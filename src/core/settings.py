@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework.authtoken",
+    "djoser",
     "drf_spectacular",
     "corsheaders",
     "api",
@@ -113,6 +114,19 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+DJOSER = {
+    "LOGIN_FIELD": "username",
+    "USER_CREATE_PASSWORD_RETYPE": False,
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Simple Shop",
+    "DESCRIPTION": "Simple API for eshop backend.",
+    "VERSION": "0.1.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SERVE_AUTHENTICATION": ("rest_framework.authentication.TokenAuthentication",),
 }
 
 LANGUAGE_CODE = "en-us"
