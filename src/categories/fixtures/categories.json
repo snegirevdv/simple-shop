@@ -1,0 +1,21 @@
+[
+    {
+      "model": "categories.category",
+      "pk": 1,
+      "fields": {
+        "name": "Фрукты",
+        "slug": "fruits",
+        "image": "categories/fruits.jpg"
+      }
+    },
+    {
+      "model": "categories.category",
+      "pk": 2,
+      "fields": {
+        "name": "Овощи",
+        "slug": "vegetables",
+        "image": "categories/vegetables.jpg"
+      }
+    }
+  ]
+  

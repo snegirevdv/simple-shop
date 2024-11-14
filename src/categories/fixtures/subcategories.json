@@ -1,0 +1,23 @@
+[
+    {
+      "model": "categories.subcategory",
+      "pk": 1,
+      "fields": {
+        "name": "Цитрусовые",
+        "slug": "citrus",
+        "image": "subcategories/citrus.jpg",
+        "category": 1
+      }
+    },
+    {
+      "model": "categories.subcategory",
+      "pk": 2,
+      "fields": {
+        "name": "Корнеплоды",
+        "slug": "root-vegetables",
+        "image": "subcategories/root_vegetables.jpg",
+        "category": 2
+      }
+    }
+  ]
+  

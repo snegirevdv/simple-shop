@@ -1,0 +1,25 @@
+[
+    {
+      "model": "products.product",
+      "pk": 1,
+      "fields": {
+        "name": "Апельсин",
+        "slug": "orange",
+        "subcategory": 1,
+        "image": "products/original/orange.jpg",
+        "price": "1.50"
+      }
+    },
+    {
+      "model": "products.product",
+      "pk": 2,
+      "fields": {
+        "name": "Морковь",
+        "slug": "carrot",
+        "subcategory": 2,
+        "image": "products/original/carrot.jpg",
+        "price": "0.80"
+      }
+    }
+  ]
+  
