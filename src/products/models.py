@@ -1,7 +1,8 @@
 import os
 
 from django.conf import settings
-from django.db import models
+from django.core.validators import MinValueValidator
+from django.db import models, transaction
 from PIL import Image
 
 from categories.models import SubCategory
@@ -50,12 +51,31 @@ class Product(models.Model):
     price = models.DecimalField(
         max_digits=Price.MAX_DIGITS,
         decimal_places=Price.DECIMAL_PLACES,
+        validators=[MinValueValidator(0)],
         help_text="Price of the product.",
     )
 
+    @transaction.atomic
     def save(self, *args, **kwargs) -> None:
         super().save(*args, **kwargs)
         self.create_images()
+        super().save(
+            update_fields=[f"image_{size_name}" for size_name in IMAGE_SIZES.keys()]
+        )
+
+    def delete(self, *args, **kwargs):
+        for image in (
+            self.image,
+            self.image_small,
+            self.image_medium,
+            self.image_large,
+        ):
+            storage = image.storage
+
+            if storage.exists(image.name):
+                storage.delete(image.name)
+
+        super().delete(*args, **kwargs)
 
     def __str__(self) -> str:
         return self.name
@@ -80,7 +100,3 @@ class Product(models.Model):
             image.save(full_path)
 
             setattr(self, f"image_{size_name}", base_path)
-
-        super().save(
-            update_fields=[f"image_{size_name}" for size_name in IMAGE_SIZES.keys()],
-        )

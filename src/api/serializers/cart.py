@@ -1,3 +1,5 @@
+from decimal import Decimal
+from django.db.models import Sum, F, DecimalField
 from rest_framework import serializers
 
 from api.constants import MIN_QUANTITY
@@ -42,8 +44,11 @@ class CartReadSerializer(serializers.ModelSerializer):
 
     def get_total_quantity(self, cart: Cart):
         """Calculates the total quantity of all items in the cart."""
-        return sum(item.quantity for item in cart.cart_items.all())
+        return cart.cart_items.aggregate(total=Sum("quantity"))["total"] or 0
 
-    def get_total_price(self, cart: Cart):
+    def get_total_price(self, cart: Cart) -> Decimal:
         """Calculates the total price of all items in the cart."""
-        return sum(item.quantity * item.product.price for item in cart.cart_items.all())
+        total = cart.cart_items.aggregate(
+            total=Sum(F("quantity") * F("product__price"), output_field=DecimalField())
+        )["total"]
+        return total or Decimal("0.00")

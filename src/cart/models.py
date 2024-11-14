@@ -16,7 +16,7 @@ class Cart(models.Model):
         related_name="shopping_cart",
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Cart of {self.user.username}"
 
 
@@ -34,5 +34,5 @@ class CartItem(models.Model):
         help_text="Quantity of the product in the cart.",
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.product.name} - {self.quantity}"

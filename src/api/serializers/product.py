@@ -12,7 +12,7 @@ class ProductReadSerializer(serializers.ModelSerializer):
 
     def get_images(self, obj: Product) -> dict[str, str]:
         """Generates absolute URLs for product images in different sizes."""
-        request: HttpRequest = self.context.get("request")
+        request: HttpRequest = self.context["request"]
 
         return {
             "original": request.build_absolute_uri(obj.image.url),
