@@ -4,6 +4,8 @@ from categories.models import Category, SubCategory
 
 
 class SubCategoryReadSerializer(serializers.ModelSerializer):
+    """Serializer for reading SubCategory instances."""
+
     class Meta:
         model = SubCategory
         fields = ("id", "name", "slug", "image")
@@ -11,8 +13,11 @@ class SubCategoryReadSerializer(serializers.ModelSerializer):
 
 
 class CategoryReadSerializer(serializers.ModelSerializer):
-    subcategories = SubCategoryReadSerializer(many=True, read_only=True)
+    """Serializer for reading Category instances, including their subcategories."""
+
+    subcategories = SubCategoryReadSerializer(many=True)
 
     class Meta:
         model = Category
         fields = ("id", "name", "slug", "image", "subcategories")
+        read_only_fields = fields

@@ -4,11 +4,14 @@ from products.models import Product
 
 
 class ProductReadSerializer(serializers.ModelSerializer):
+    """Serializer for reading Product instances"""
+
     category = serializers.CharField(source="subcategory.category.name")
     subcategory = serializers.CharField(source="subcategory.name")
     images = serializers.SerializerMethodField()
 
     def get_images(self, obj: Product) -> dict[str, str]:
+        """Generates absolute URLs for product images in different sizes."""
         request: HttpRequest = self.context.get("request")
 
         return {

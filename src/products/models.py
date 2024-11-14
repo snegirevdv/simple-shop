@@ -5,41 +5,67 @@ from django.db import models
 from PIL import Image
 
 from categories.models import SubCategory
+from products.constants import MaxLength, ImageUploadPath, IMAGE_SIZES, Price
 
 
 class Product(models.Model):
+    """Model representing a product."""
+
     subcategory = models.ForeignKey(
         SubCategory,
         related_name="products",
         on_delete=models.CASCADE,
     )
-    name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True)
-    image = models.ImageField(upload_to="products/original/")
-    image_small = models.ImageField(upload_to="products/small/", null=True, blank=True)
-    image_medium = models.ImageField(
-        upload_to="products/medium/",
+    name = models.CharField(
+        max_length=MaxLength.NAME,
+        help_text="The name of the product.",
+    )
+    slug = models.SlugField(
+        unique=True,
+        max_length=MaxLength.SLUG,
+        help_text="Unique slug for the product URL.",
+    )
+    image = models.ImageField(
+        upload_to=ImageUploadPath.ORIGINAL,
+        help_text="Original image of the product.",
+    )
+    image_small = models.ImageField(
+        upload_to=ImageUploadPath.SMALL,
         null=True,
         blank=True,
+        help_text="Small version of the product image.",
     )
-    image_large = models.ImageField(upload_to="products/large/", null=True, blank=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    image_medium = models.ImageField(
+        upload_to=ImageUploadPath.MEDIUM,
+        null=True,
+        blank=True,
+        help_text="Medium version of the product image.",
+    )
+    image_large = models.ImageField(
+        upload_to=ImageUploadPath.LARGE,
+        null=True,
+        blank=True,
+        help_text="Large version of the product image.",
+    )
+    price = models.DecimalField(
+        max_digits=Price.MAX_DIGITS,
+        decimal_places=Price.DECIMAL_PLACES,
+        help_text="Price of the product.",
+    )
 
     def save(self, *args, **kwargs) -> None:
         super().save(*args, **kwargs)
         self.create_images()
 
+    def __str__(self) -> str:
+        return self.name
+
     def create_images(self) -> None:
         """Creates small, medium, and large versions of the product image."""
-        sizes = {
-            "small": (100, 100),
-            "medium": (300, 300),
-            "large": (600, 600),
-        }
 
         original_image = Image.open(self.image.path)
 
-        for size_name, size in sizes.items():
+        for size_name, size in IMAGE_SIZES.items():
             image = original_image.copy()
             image.thumbnail(size)
 
@@ -55,7 +81,6 @@ class Product(models.Model):
 
             setattr(self, f"image_{size_name}", base_path)
 
-        super().save(update_fields=[f"image_{size_name}" for size_name in sizes.keys()])
-
-    def __str__(self) -> str:
-        return self.name
+        super().save(
+            update_fields=[f"image_{size_name}" for size_name in IMAGE_SIZES.keys()],
+        )
